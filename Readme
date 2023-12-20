@@ -1,0 +1,135 @@
+// To parse this JSON data, do
+//
+//     final surah = surahFromJson(jsonString);
+
+import 'package:meta/meta.dart';
+import 'dart:convert';
+import 'package:quran_app/models/ayat.dart';
+
+List<Surah> surahFromJson(String str) =>
+     List<Surah>.from(json.decode(str).map((x)=> Surah.fromJson(x)));
+
+String surahToJson(List<Surah> data) =>
+ json.encode(List<dynamic>.from(data.map((x)=> x.toJson())));
+
+class Surah {
+    int code;
+    String message;
+    List<Datum> data;
+
+    Surah({
+        required this.code,
+        required this.message,
+        required this.data,
+    });
+
+    factory Surah.fromJson(Map<String, dynamic> json) => Surah(
+        code: json["code"],
+        message: json["message"],
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "code": code,
+        "message": message,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+    };
+}
+
+class Datum {
+    int number;
+    String name;
+    String latinName;
+    int sumAyat;
+    String destination;
+    String arti;
+    String description;
+    Map<String, String> audioFull;
+    GettingOff gettingOff;
+    String meaning;
+    int jumlahAyat;
+    GettingOff tempatTurun;
+    String deskripsi;
+    int nomor;
+    String nama;
+    String namaLatin;
+
+    Datum({
+        required this.number,
+        required this.name,
+        required this.latinName,
+        required this.sumAyat,
+        required this.destination,
+        required this.arti,
+        required this.description,
+        required this.audioFull,
+        required this.gettingOff,
+        required this.meaning,
+        required this.jumlahAyat,
+        required this.tempatTurun,
+        required this.deskripsi,
+        required this.nomor,
+        required this.nama,
+        required this.namaLatin,
+    });
+
+    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        number: json["number"],
+        name: json["name"],
+        latinName: json["Latin name"],
+        sumAyat: json["sumAyat"],
+        destination: json["Destination"],
+        arti: json["arti"],
+        description: json["description"],
+        audioFull: Map.from(json["audioFull"]).map((k, v) => MapEntry<String, String>(k, v)),
+        gettingOff: gettingOffValues.map[json["Getting off"]]!,
+        meaning: json["meaning"],
+        jumlahAyat: json["jumlahAyat"],
+        tempatTurun: gettingOffValues.map[json["tempatTurun"]]!,
+        deskripsi: json["deskripsi"],
+        nomor: json["nomor"],
+        nama: json["nama"],
+        namaLatin: json["namaLatin"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "number": number,
+        "name": name,
+        "Latin name": latinName,
+        "sumAyat": sumAyat,
+        "Destination": destination,
+        "arti": arti,
+        "description": description,
+        "audioFull": Map.from(audioFull).map((k, v) => MapEntry<String, dynamic>(k, v)),
+        "Getting off": gettingOffValues.reverse[gettingOff],
+        "meaning": meaning,
+        "jumlahAyat": jumlahAyat,
+        "tempatTurun": gettingOffValues.reverse[tempatTurun],
+        "deskripsi": deskripsi,
+        "nomor": nomor,
+        "nama": nama,
+        "namaLatin": namaLatin,
+    };
+}
+
+enum GettingOff {
+    MADINAH,
+    MEKAH
+}
+
+final gettingOffValues = EnumValues({
+    "Madinah": GettingOff.MADINAH,
+    "Mekah": GettingOff.MEKAH
+});
+
+class EnumValues<T> {
+    Map<String, T> map;
+    late Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+        reverseMap = map.map((k, v) => MapEntry(v, k));
+        return reverseMap;
+    }
+}
